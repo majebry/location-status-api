@@ -43,7 +43,7 @@ class EntryController extends Controller
 
         // Turn the given location coordinate into a Geometry Point
         $locationPoint = Point::fromString(
-            str_replace(',', ' ', $request->payload['location'])
+            str_replace(',', ' ', $request->payload_fields['location'])
         );
 
         // If the given Point already stored, update its value.
@@ -52,7 +52,7 @@ class EntryController extends Controller
             ?
             : Entry::make(['location' => $locationPoint]);
 
-        $entry->pollution_rate = $request->payload['pollution_rate'];
+        $entry->pollution_rate = $request->payload_fields['pollution_rate'];
 
         $entry->updated_at = now();
         $saved = $entry->save();
