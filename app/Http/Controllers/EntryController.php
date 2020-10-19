@@ -22,9 +22,10 @@ class EntryController extends Controller
 
         // Get the value of the nearest Point from the given Location up to 20 meters,
         // Where the entry was updated in the last 10 minutes
-        $entry = Entry::distance('location', $locationPoint, 20)
-            ->where('updated_at', '>', now()->subMinutes(10))
+        $entry = Entry::distance('location', $locationPoint, 50)
+            ->where('updated_at', '>', now()->subHours(24))
             ->orderByDistance('location', $locationPoint)
+            ->orderBy('updated_at', 'DESC')
             ->first();
 
         return response()->json($entry);
@@ -33,14 +34,16 @@ class EntryController extends Controller
     public function store(Request $request)
     {
         // Validate sent data are in correct format
-        $request->validate([
-            'location'  =>  ['required', 'regex:/^(-?\d+(\.\d+)?),*(-?\d+(\.\d+)?)$/'],
-            'pollution_rate' => ['required', 'numeric']
-        ]);
+        // $request->validate([
+        //     'location'  =>  ['required', 'regex:/^(-?\d+(\.\d+)?),*(-?\d+(\.\d+)?)$/'],
+        //     'pollution_rate' => ['required', 'numeric']
+        // ]);
+
+        error_log(print_r($request->all(), true), 3, storage_path() . '/logs/request.log');
 
         // Turn the given location coordinate into a Geometry Point
         $locationPoint = Point::fromString(
-            str_replace(',', ' ', $request->location)
+            str_replace(',', ' ', $request->payload['location'])
         );
 
         // If the given Point already stored, update its value.
@@ -49,10 +52,12 @@ class EntryController extends Controller
             ?
             : Entry::make(['location' => $locationPoint]);
 
-        $entry->pollution_rate = $request->pollution_rate;
+        $entry->pollution_rate = $request->payload['pollution_rate'];
 
         $entry->updated_at = now();
-        $entry->save();
+        $saved = $entry->save();
+
+        error_log(print_r(['saved' => $saved, 'time' => now()], true), 3, storage_path() . '/logs/saved.log');
 
         return response()->json($entry);
     }
