@@ -16,7 +16,19 @@ class CreateEntriesTable extends Migration
         Schema::create('entries', function (Blueprint $table) {
             $table->id();
             $table->point('location');
-            $table->float('pollution_rate');
+            $table->string('device_id')->nullable();
+            $table->integer('humidity')->nullable();
+            $table->integer('temperature')->nullable();
+            $table->integer('pm1_0')->nullable();
+            $table->integer('pm2_5')->nullable();
+            $table->integer('pm10')->nullable();
+            $table->integer('noparticles_0_3')->nullable();
+            $table->integer('noparticles_0_5')->nullable();
+            $table->integer('noparticles_1_0')->nullable();
+            $table->integer('noparticles_2_5')->nullable();
+            $table->integer('noparticles_5_0')->nullable();
+            $table->integer('noparticles_10')->nullable();
+            $table->integer('aqi')->nullable();
             $table->timestamps();
         });
     }
