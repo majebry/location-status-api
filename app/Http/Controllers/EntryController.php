@@ -8,11 +8,9 @@ use Illuminate\Http\Request;
 
 class EntryController extends Controller
 {
-    private $apiKey = 'tm5OSzAIxjmGxSrHRCRmm7kPzLD93jujZD1HUSvdo00o3O1SoTdBFw';
-
     public function index(Request $request)
     {
-        if (request()->api_key != $this->apiKey) {
+        if (request()->api_key != config('api_key.key')) {
             abort(403, "API_KEY IS INVALID");
         }
 
@@ -56,7 +54,7 @@ class EntryController extends Controller
 
     public function store(Request $request)
     {
-        if (request()->payload_fields['api_key'] != $this->apiKey) {
+        if (request()->payload_fields['api_key'] != config('api_key.key')) {
             abort(403, "API_KEY IS INVALID");
         }
 
