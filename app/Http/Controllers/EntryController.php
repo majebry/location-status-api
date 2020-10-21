@@ -30,7 +30,7 @@ class EntryController extends Controller
             ->where('updated_at', '>', now()->subHours(24))
             ->orderByDistance('location', $locationPoint)
             ->orderBy('updated_at', 'DESC')
-            ->first();
+            ->firstOrFail();
 
         return response()->json([
             'Latitude'          =>  $entry->location->getLat(),
