@@ -30,26 +30,47 @@ class EntryController extends Controller
             ->where('updated_at', '>', now()->subHours(24))
             ->orderByDistance('location', $locationPoint)
             ->orderBy('updated_at', 'DESC')
-            ->firstOrFail();
+            ->first();
 
-        return response()->json([
-            'Latitude'          =>  $entry->location->getLat(),
-            'Longitude'         =>  $entry->location->getLng(),
-            'Device_ID'         =>  $entry->device_id,
-            'Humidity'          =>  $entry->humidity,
-            'Temperature'       =>  $entry->temperature,
-            'PM1_0'             =>  $entry->pm1_0,
-            'PM2_5'             =>  $entry->pm2_5,
-            'PM10'              =>  $entry->pm10,
-            'NoParticles_0_3'   =>  $entry->noparticles_0_3,
-            'NoParticles_0_5'   =>  $entry->noparticles_0_5,
-            'NoParticles_1_0'   =>  $entry->noparticles_1_0,
-            'NoParticles_2_5'   =>  $entry->noparticles_2_5,
-            'NoParticles_5_0'   =>  $entry->noparticles_5_0,
-            'NoParticles_10'    =>  $entry->noparticles_10,
-            'AQI'               =>  $entry->aqi,
-            'updated_at'        =>  $entry->updated_at->toDateTimeString()
-        ]);
+        if ($entry) {
+            return response()->json([
+                'Latitude'          =>  $entry->location->getLat(),
+                'Longitude'         =>  $entry->location->getLng(),
+                'Device_ID'         =>  $entry->device_id,
+                'Humidity'          =>  $entry->humidity,
+                'Temperature'       =>  $entry->temperature,
+                'PM1_0'             =>  $entry->pm1_0,
+                'PM2_5'             =>  $entry->pm2_5,
+                'PM10'              =>  $entry->pm10,
+                'NoParticles_0_3'   =>  $entry->noparticles_0_3,
+                'NoParticles_0_5'   =>  $entry->noparticles_0_5,
+                'NoParticles_1_0'   =>  $entry->noparticles_1_0,
+                'NoParticles_2_5'   =>  $entry->noparticles_2_5,
+                'NoParticles_5_0'   =>  $entry->noparticles_5_0,
+                'NoParticles_10'    =>  $entry->noparticles_10,
+                'AQI'               =>  $entry->aqi,
+                'updated_at'        =>  $entry->updated_at->toDateTimeString()
+            ]);
+        } else {
+            return response()->json([
+                'Latitude'          =>  "",
+                'Longitude'         =>  "",
+                'Device_ID'         =>  "",
+                'Humidity'          =>  0,
+                'Temperature'       =>  0,
+                'PM1_0'             =>  0,
+                'PM2_5'             =>  0,
+                'PM10'              =>  0,
+                'NoParticles_0_3'   =>  0,
+                'NoParticles_0_5'   =>  0,
+                'NoParticles_1_0'   =>  0,
+                'NoParticles_2_5'   =>  0,
+                'NoParticles_5_0'   =>  0,
+                'NoParticles_10'    =>  0,
+                'AQI'               =>  0,
+                'updated_at'        =>  ""
+            ]);
+        }
     }
 
     public function store(Request $request)
