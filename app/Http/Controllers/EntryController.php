@@ -20,15 +20,13 @@ class EntryController extends Controller
         ]);
 
         // Turn the given location coordinate into a Geometry Point
-        $locationPoint = Point::fromString(
-            $request->latitude . ' ' . $request->longitude
-        );
+        $locationPoint = new Point($request->latitude, $request->longitude);
 
         // Get the value of the nearest Point from the given Location up to 50 meters,
         // Where the entry was updated in the last 24 hours
-        $entry = Entry::distance('location', $locationPoint, 50)
+        $entry = Entry::distanceSphere('location', $locationPoint, 50)
             ->where('updated_at', '>', now()->subHours(24))
-            ->orderByDistance('location', $locationPoint)
+            ->orderByDistanceSphere('location', $locationPoint)
             ->orderBy('updated_at', 'DESC')
             ->first();
 
@@ -82,8 +80,9 @@ class EntryController extends Controller
         error_log(print_r($request->all(), true), 3, storage_path() . '/logs/request.log');
 
         // Turn the given location coordinate into a Geometry Point
-        $locationPoint = Point::fromString(
-            $request->payload_fields['Latitude'] . ' ' . $request->payload_fields['Longitude']
+        $locationPoint = new Point(
+            $request->payload_fields['Latitude'],
+            $request->payload_fields['Longitude']
         );
 
         // If the given Point already stored, update its value.
