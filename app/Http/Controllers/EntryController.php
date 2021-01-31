@@ -77,8 +77,6 @@ class EntryController extends Controller
             abort(403, "API_KEY IS INVALID");
         }
 
-        error_log(print_r($request->all(), true), 3, storage_path() . '/logs/request.log');
-
         // Turn the given location coordinate into a Geometry Point
         $locationPoint = new Point(
             $request->payload_fields['Latitude'],
@@ -87,9 +85,7 @@ class EntryController extends Controller
 
         // If the given Point already stored, update its value.
         // Otherwise create a new entry
-        $entry = Entry::equals('location', $locationPoint)->first()
-            ?
-            : Entry::make(['location' => $locationPoint]);
+        $entry = Entry::make(['location' => $locationPoint]);
 
         $entry->device_id         = $request->payload_fields['Device_ID'];
         $entry->humidity          = $request->payload_fields['Humidity'];
@@ -105,11 +101,7 @@ class EntryController extends Controller
         $entry->noparticles_10    = $request->payload_fields['NoParticles_10'];
         $entry->aqi               = $request->payload_fields['AQI'];
 
-        $entry->touch();
-
         $saved = $entry->save();
-
-        error_log(print_r(['saved' => $saved, 'time' => now()], true), 3, storage_path() . '/logs/saved.log');
 
         return response()->json(['success' => $saved], $saved ? 201 : 409);
     }
