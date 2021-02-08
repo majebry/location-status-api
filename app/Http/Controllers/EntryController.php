@@ -77,11 +77,11 @@ class EntryController extends Controller
 
     public function store(Request $request)
     {
+        error_log(print_r($request->all(), true), 3, storage_path() . '/logs/request.log');
+
         if (request()->payload_fields['api_key'] != config('api_key.key')) {
             abort(403, "API_KEY IS INVALID");
         }
-
-        error_log(print_r($request->all(), true), 3, storage_path() . '/logs/request.log');
 
         // $request->validate([
         //     'payload_fields' => 'required|array',
