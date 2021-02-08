@@ -47,6 +47,8 @@ class EntryController extends Controller
                 'NoParticles_5_0'   =>  $entry->noparticles_5_0,
                 'NoParticles_10'    =>  $entry->noparticles_10,
                 'AQI'               =>  $entry->aqi,
+                'metadata'          =>  json_decode($entry->metadata, true),
+                'otherdata'         =>  json_decode($entry->otherdata, true),
                 'updated_at'        =>  $entry->updated_at->toDateTimeString()
             ]);
         } else {
@@ -66,6 +68,8 @@ class EntryController extends Controller
                 'NoParticles_5_0'   =>  0,
                 'NoParticles_10'    =>  0,
                 'AQI'               =>  0,
+                'metadata'          =>  "",
+                'otherdata'         =>  "",
                 'updated_at'        =>  ""
             ]);
         }
@@ -76,6 +80,11 @@ class EntryController extends Controller
         if (request()->payload_fields['api_key'] != config('api_key.key')) {
             abort(403, "API_KEY IS INVALID");
         }
+
+        $request->validate([
+            'payload_fields' => 'required|array',
+            'metadata' => 'required|array',
+        ]);
 
         // Turn the given location coordinate into a Geometry Point
         $locationPoint = new Point(
@@ -100,6 +109,18 @@ class EntryController extends Controller
         $entry->noparticles_5_0   = $request->payload_fields['NoParticles_5_0'];
         $entry->noparticles_10    = $request->payload_fields['NoParticles_10'];
         $entry->aqi               = $request->payload_fields['AQI'];
+        $entry->metadata          = json_encode($request->metadata);
+        $entry->otherdata         = json_encode([
+            $request->app_id,
+            $request->dev_id,
+            $request->hardware_serial,
+            $request->port,
+            $request->counter,
+            $request->confirmed,
+            $request->is_retry,
+            $request->payload_raw,
+            $request->downlink_url,
+        ]);
 
         $saved = $entry->save();
 
