@@ -111,15 +111,15 @@ class EntryController extends Controller
         $entry->aqi               = $request->payload_fields['AQI'];
         $entry->metadata          = json_encode($request->metadata);
         $entry->otherdata         = json_encode([
-            $request->app_id,
-            $request->dev_id,
-            $request->hardware_serial,
-            $request->port,
-            $request->counter,
-            $request->confirmed,
-            $request->is_retry,
-            $request->payload_raw,
-            $request->downlink_url,
+            'app_id' => $request->app_id,
+            'dev_id' => $request->dev_id,
+            'hardware_serial' => $request->hardware_serial,
+            'port' => $request->port,
+            'counter' => $request->counter,
+            'confirmed' => $request->confirmed,
+            'is_retry' => $request->is_retry,
+            'payload_raw' => $request->payload_raw,
+            'downlink_url' => $request->downlink_url,
         ]);
 
         $saved = $entry->save();
