@@ -81,6 +81,8 @@ class EntryController extends Controller
             abort(403, "API_KEY IS INVALID");
         }
 
+        error_log(print_r($request->all(), true), 3, storage_path() . '/logs/request.log');
+
         // $request->validate([
         //     'payload_fields' => 'required|array',
         //     'metadata' => 'required|array',
@@ -123,6 +125,8 @@ class EntryController extends Controller
         ]);
 
         $saved = $entry->save();
+
+        error_log(print_r(['saved' => $saved, 'time' => now()], true), 3, storage_path() . '/logs/saved.log');
 
         return response()->json(['success' => $saved], $saved ? 201 : 409);
     }
