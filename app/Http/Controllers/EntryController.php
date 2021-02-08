@@ -81,10 +81,10 @@ class EntryController extends Controller
             abort(403, "API_KEY IS INVALID");
         }
 
-        $request->validate([
-            'payload_fields' => 'required|array',
-            'metadata' => 'required|array',
-        ]);
+        // $request->validate([
+        //     'payload_fields' => 'required|array',
+        //     'metadata' => 'required|array',
+        // ]);
 
         // Turn the given location coordinate into a Geometry Point
         $locationPoint = new Point(
