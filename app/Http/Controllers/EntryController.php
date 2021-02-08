@@ -98,7 +98,7 @@ class EntryController extends Controller
         // Otherwise create a new entry
         $entry = Entry::make(['location' => $locationPoint]);
 
-        $entry->device_id         = $request->payload_fields['Device_ID'];
+        $entry->device_id         = isset($request->payload_fields['Device_ID']) ? $request->payload_fields['Device_ID'] : 0;
         $entry->humidity          = $request->payload_fields['Humidity'];
         $entry->temperature       = $request->payload_fields['Temperature'];
         $entry->pm1_0             = $request->payload_fields['PM1_0'];
