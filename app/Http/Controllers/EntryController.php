@@ -24,8 +24,8 @@ class EntryController extends Controller
 
         // Get the value of the nearest Point from the given Location up to 50 meters,
         // Where the entry was updated in the last 24 hours
-        $entry = Entry::distanceSphere('location', $locationPoint, 50)
-            ->where('updated_at', '>', now()->subHours(24))
+        $entry = Entry::where('updated_at', '>', now()->subHours(24))
+            ->distanceSphere('location', $locationPoint, 50)
             ->orderByDistanceSphere('location', $locationPoint)
             ->orderBy('updated_at', 'DESC')
             ->first();
